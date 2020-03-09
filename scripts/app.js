@@ -1,5 +1,4 @@
 const FlowLayout = require("./components/flowlayout");
-const idManager = require("./utils/id");
 
 const texts = [
   "1",
@@ -35,7 +34,7 @@ const texts = [
 ];
 
 function init() {
-  const flowLayout = new FlowLayout({ 
+  const flowLayout = new FlowLayout({
     props: {
       data: texts,
       spacing: 8,
@@ -44,28 +43,28 @@ function init() {
       bgcolor: $color("white"),
       template: {
         props: {
-          radius: 5,
+          radius: 5
           //borderWidth: 0.5,
           //borderColor: $color("gray")
         }
       }
     },
     layout: (make, view) => {
-      make.size.equalTo($size(300, 200))
-      make.center.equalTo(view.super)
+      make.size.equalTo($size(300, 200));
+      make.center.equalTo(view.super);
     },
     events: {
       didScroll: function(sender) {
-        console.info(1)
+        console.info(1);
       },
       didSelect: (sender, indexPath, data) => {
-        console.info(data)
+        console.info(data);
       },
       didLongPress: (sender, indexPath, data) => {
-        console.info(data)
+        console.info(data);
       }
     }
-  })
+  });
   $ui.render({
     views: [
       {
@@ -76,12 +75,21 @@ function init() {
         layout: $layout.fill,
         events: {
           ready: sender => {
-            sender.relayout()
+            sender.relayout();
             sender.add(flowLayout.definition);
           }
         }
       }
     ]
+  });
+  $delay(1, function() {
+    flowLayout.data = ["1", "2"];
+  });
+  $delay(2, function() {
+    flowLayout.insert({ indexPath: $indexPath(0, 0), value: "0" });
+  });
+  $delay(3, function() {
+    flowLayout.delete($indexPath(0, 0));
   });
 }
 

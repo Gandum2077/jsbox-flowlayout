@@ -98,10 +98,11 @@ class FlowLayout extends BaseView {
   }) {
     super();
     this.props = props;
+    this.props.id = this.id;
     this.props.spacing = spacing;
     this.props.data = data;
     this.cellHeight = cellHeight;
-    this.data = data;
+    this._data = data;
     this.template = template;
     this.layout = layout;
     this.events = events;
@@ -136,7 +137,7 @@ class FlowLayout extends BaseView {
   _createCells() {
     const classThis = this;
     const otherProps = this.template.props || {};
-    const cells = this.data.map(
+    const cells = this._data.map(
       (text, index) =>
         new Cell({
           props: {
@@ -215,6 +216,13 @@ class FlowLayout extends BaseView {
     };
   }
 
+  set data(data) {
+    this._data = data
+    this._createCells()
+    this.view.views.forEach(n => n.remove())
+    this.cells.forEach(cell => this.view.add(cell.created));
+  }
+
   cell(indexPath) {
     const { item } = indexPath;
     return $(this.id).views[item];
@@ -223,6 +231,16 @@ class FlowLayout extends BaseView {
   object(indexPath) {
     const { item } = indexPath;
     return $(this.id).views[item].text;
+  }
+
+  insert({indexPath, value}) {
+    this._data.splice(indexPath.item, 0, value)
+    this.data = this._data
+  }
+
+  delete(indexPath) {
+    this._data.splice(indexPath.item, 1)
+    this.data = this._data
   }
 }
 
