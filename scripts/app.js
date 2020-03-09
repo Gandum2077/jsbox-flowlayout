@@ -60,6 +60,9 @@ function init() {
       },
       didSelect: (sender, indexPath, data) => {
         console.info(data)
+      },
+      didLongPress: (sender, indexPath, data) => {
+        console.info(data)
       }
     }
   })

@@ -1,10 +1,11 @@
 const BaseView = require("./baseView");
 
 class Cell extends BaseView {
-  constructor({ props = {}, events: { tapped } = {} }) {
-    super()
+  constructor({ props = {}, events: { tapped, longPressed } = {} }) {
+    super();
     this.props = Object.assign({}, this.constructor.defaultProps, props);
     this.tapped = tapped;
+    this.longPressed = longPressed;
   }
 
   _defineView() {
@@ -13,7 +14,8 @@ class Cell extends BaseView {
       type: "label",
       props: this.props,
       events: {
-        tapped: this.tapped
+        tapped: this.tapped,
+        longPressed: this.longPressed
       }
     };
   }
@@ -27,7 +29,10 @@ class Cell extends BaseView {
         width: 10000,
         font: this.props.font
       });
-      this._realSize = $size(Math.round(textSize.width) + 27, this.props.cellHeight);
+      this._realSize = $size(
+        Math.round(textSize.width) + 27,
+        this.props.cellHeight
+      );
       return this._realSize;
     }
   }
@@ -46,7 +51,7 @@ class Cell extends BaseView {
       if (!view) this.view = view;
     }
     if (this.view) return this.view.frame;
-    return $zero.rect
+    return $zero.rect;
   }
 }
 
@@ -72,6 +77,7 @@ Cell.defaultProps = {
  *
  * 独特事件：
  *   didSelect: (sender, indexPath, data) => {}
+ *   didLongPress: function(sender, indexPath, data) {}
  *
  * 独特方法：
  *   cell(indexPath) 返回 indexPath 位置的view
@@ -90,7 +96,7 @@ class FlowLayout extends BaseView {
     layout,
     events = {}
   }) {
-    super()
+    super();
     this.props = props;
     this.props.spacing = spacing;
     this.props.data = data;
@@ -129,7 +135,7 @@ class FlowLayout extends BaseView {
 
   _createCells() {
     const classThis = this;
-    const otherProps = (this.template.props) || {}
+    const otherProps = this.template.props || {};
     const cells = this.data.map(
       (text, index) =>
         new Cell({
@@ -143,6 +149,15 @@ class FlowLayout extends BaseView {
             tapped: sender => {
               if (classThis.events.didSelect) {
                 classThis.events.didSelect(
+                  sender.super,
+                  $indexPath(0, sender.info.index),
+                  sender.text
+                );
+              }
+            },
+            longPressed: ({ sender }) => {
+              if (classThis.events.didLongPress) {
+                classThis.events.didLongPress(
                   sender.super,
                   $indexPath(0, sender.info.index),
                   sender.text
@@ -165,7 +180,8 @@ class FlowLayout extends BaseView {
       ) {
         cell.frame = $rect(
           cumWidth + this.props.spacing,
-          rowIndex * (cell.realSize.height + this.props.spacing) + this.props.spacing,
+          rowIndex * (cell.realSize.height + this.props.spacing) +
+            this.props.spacing,
           cell.realSize.width,
           cell.realSize.height
         );
@@ -175,14 +191,18 @@ class FlowLayout extends BaseView {
         cumWidth = 0;
         cell.frame = $rect(
           cumWidth + this.props.spacing,
-          rowIndex * (cell.realSize.height + this.props.spacing)+ this.props.spacing,
+          rowIndex * (cell.realSize.height + this.props.spacing) +
+            this.props.spacing,
           cell.realSize.width,
           cell.realSize.height
         );
         cumWidth += cell.realSize.width + this.props.spacing;
       }
     }
-    return (rowIndex + 1) * (this.cellHeight + this.props.spacing) + this.props.spacing
+    return (
+      (rowIndex + 1) * (this.cellHeight + this.props.spacing) +
+      this.props.spacing
+    );
   }
 
   _defineView() {
