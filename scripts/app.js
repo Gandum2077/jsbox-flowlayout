@@ -58,10 +58,10 @@ function init() {
         console.info(1);
       },
       didSelect: (sender, indexPath, data) => {
-        console.info(data);
+        console.info("didSelect", data);
       },
       didLongPress: (sender, indexPath, data) => {
-        console.info(data);
+        console.info("didLongPress", data);
       }
     }
   });

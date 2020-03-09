@@ -11,8 +11,21 @@ class Cell extends BaseView {
   _defineView() {
     this.props.size = this.realSize;
     return {
-      type: "label",
-      props: this.props,
+      type: "button",
+      props: {
+        bgcolor: $color("clear"),
+        radius: 0,
+        info: {
+          index: this.props.info.index,
+          text: this.props.text
+        }
+      },
+      views: [
+        {
+          type: "label",
+          props: this.props
+        }
+      ],
       events: {
         tapped: this.tapped,
         longPressed: this.longPressed
@@ -62,7 +75,7 @@ Cell.defaultProps = {
   borderColor: $color("#ddd"),
   borderWidth: 0.5,
   align: $align.center,
-  userInteractionEnabled: true
+  userInteractionEnabled: false
 };
 
 /**
@@ -152,7 +165,7 @@ class FlowLayout extends BaseView {
                 classThis.events.didSelect(
                   sender.super,
                   $indexPath(0, sender.info.index),
-                  sender.text
+                  sender.info.text
                 );
               }
             },
@@ -161,7 +174,7 @@ class FlowLayout extends BaseView {
                 classThis.events.didLongPress(
                   sender.super,
                   $indexPath(0, sender.info.index),
-                  sender.text
+                  sender.info.text
                 );
               }
             }
@@ -217,9 +230,9 @@ class FlowLayout extends BaseView {
   }
 
   set data(data) {
-    this._data = data
-    this._createCells()
-    this.view.views.forEach(n => n.remove())
+    this._data = data;
+    this._createCells();
+    this.view.views.forEach(n => n.remove());
     this.cells.forEach(cell => this.view.add(cell.created));
   }
 
@@ -233,14 +246,14 @@ class FlowLayout extends BaseView {
     return $(this.id).views[item].text;
   }
 
-  insert({indexPath, value}) {
-    this._data.splice(indexPath.item, 0, value)
-    this.data = this._data
+  insert({ indexPath, value }) {
+    this._data.splice(indexPath.item, 0, value);
+    this.data = this._data;
   }
 
   delete(indexPath) {
-    this._data.splice(indexPath.item, 1)
-    this.data = this._data
+    this._data.splice(indexPath.item, 1);
+    this.data = this._data;
   }
 }
 
