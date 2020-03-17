@@ -2,7 +2,7 @@
 
 实现一个 columns 不定，spacing 固定，左对齐，自动换行的 FlowLayout
 
-可以继承 scroll 控件的全部属性、布局、事件
+可以继承 scroll 控件的全部属性、布局、事件。（默认属性支持dark mode自动切换）
 
 独特属性：
 

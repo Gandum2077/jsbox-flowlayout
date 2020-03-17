@@ -23,7 +23,10 @@ class Cell extends BaseView {
       views: [
         {
           type: "label",
-          props: this.props
+          props: this.props,
+          events: {
+            themeChanged: sender => sender.borderColor = this.props.borderColor
+          }
         }
       ],
       events: {
@@ -69,10 +72,10 @@ class Cell extends BaseView {
 }
 
 Cell.defaultProps = {
-  font: $font("PingFangSC-Regular", 15),
-  textColor: $color("black"),
-  bgcolor: $color("#efefef"),
-  borderColor: $color("#ddd"),
+  font: $font(15),
+  radius: 5,
+  bgcolor: $color("#f9f9f9", $color("tertiarySurface")),
+  borderColor: $color("separatorColor"),
   borderWidth: 0.5,
   align: $align.center,
   userInteractionEnabled: false
@@ -110,7 +113,7 @@ class FlowLayout extends BaseView {
     events = {}
   }) {
     super();
-    this.props = props;
+    this.props = Object.assign({}, this.constructor.defaultProps, props);
     this.props.id = this.id;
     this.props.spacing = spacing;
     this.props.data = data;
@@ -256,5 +259,10 @@ class FlowLayout extends BaseView {
     this.data = this._data;
   }
 }
+
+FlowLayout.defaultProps = {
+  bgcolor: $color("primarySurface")
+};
+
 
 module.exports = FlowLayout;

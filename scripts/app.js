@@ -40,10 +40,10 @@ function init() {
       spacing: 8,
       //cellHeight: 50,
       //scrollEnabled: false,
-      bgcolor: $color("white"),
+      //bgcolor: $color("white"),
       template: {
         props: {
-          radius: 5
+          //radius: 5
           //borderWidth: 0.5,
           //borderColor: $color("gray")
         }
